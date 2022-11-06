@@ -86,7 +86,7 @@ func analyzeImage(c echo.Context) error {
 }
 
 func checkDive(c echo.Context) error {
-	_, err := exec.LookPath("dive")
+	_, err := exec.LookPath("/usr/local/bin/dive")
 	if err != nil {
 		return c.JSON(http.StatusNotFound, HTTPMessageBody{Message: "Dive is not found"})
 	}
