@@ -61,11 +61,11 @@ export default function Analysis(props: {
             </CardContent>
           </Card>
         </Stack>
-        <Stack>
+        <Stack spacing={2}>
             <Typography variant="h3">Largest Files (sorted by size)</Typography>
             <ImageTable rows={dive.image.fileReference}></ImageTable>
         </Stack>
-        <Stack>
+        <Stack spacing={2}>
             <Typography variant="h3">Layers</Typography>
             <LayersTable rows={dive.layer}></LayersTable>
         </Stack>

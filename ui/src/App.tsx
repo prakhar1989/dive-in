@@ -68,7 +68,6 @@ export function App() {
   };
 
   const analyze = async (image: Image) => {
-    console.log("analysing", image);
     setLoading(true);
     const result = await ddClient.docker.cli.exec("run", [
       "--rm",

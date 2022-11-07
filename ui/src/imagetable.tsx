@@ -7,6 +7,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { FileReference } from './models';
 import { formatBytes } from './utils';
+import { Typography } from '@mui/material';
 
 interface TableProps {
     rows: FileReference[];
@@ -15,12 +16,12 @@ interface TableProps {
 export default function ImageTable(props: TableProps) {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="simple table">
+      <Table sx={{ minWidth: 650 }}>
         <TableHead>
           <TableRow>
-            <TableCell>Count</TableCell>
-            <TableCell align="right">Total Space</TableCell>
-            <TableCell align="right">Path</TableCell>
+            <TableCell sx={{fontWeight: 'bold'}}>Count</TableCell>
+            <TableCell sx={{fontWeight: 'bold'}} align="right">Total Space</TableCell>
+            <TableCell sx={{fontWeight: 'bold'}} align="right">Path</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

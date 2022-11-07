@@ -15,13 +15,13 @@ interface TableProps {
 export default function LayersTable(props: TableProps) {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="simple table">
+      <Table sx={{ minWidth: 650 }}>
         <TableHead>
           <TableRow>
-            <TableCell>Index</TableCell>
-            <TableCell>ID</TableCell>
-            <TableCell>Size</TableCell>
-            <TableCell align="right">Command</TableCell>
+            <TableCell sx={{fontWeight: 'bold'}}>Index</TableCell>
+            <TableCell sx={{fontWeight: 'bold'}}>ID</TableCell>
+            <TableCell sx={{fontWeight: 'bold'}}>Size</TableCell>
+            <TableCell sx={{fontWeight: 'bold'}} align="right">Command</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
