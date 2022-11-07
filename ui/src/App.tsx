@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Button from "@mui/material/Button";
 import { createDockerDesktopClient } from "@docker/extension-api-client";
 import {
   Typography,
@@ -10,8 +9,14 @@ import {
   Grid,
   CircularProgress,
   Alert,
+  Button,
   CardContent,
 } from "@mui/material";
+
+import {formatBytes, extractId} from './utils';
+import CircularProgressWithLabel from "./ring";
+import {DiveResponse, Image, AnalysisResult} from './models';
+import ImageTable from './imagetable';
 
 interface DockerImage {
   Labels: string[] | null;
@@ -19,12 +24,7 @@ interface DockerImage {
   Id: string;
 }
 
-interface Image {
-  name: string;
-  id: string;
-}
-
-const DIVE_DOCKER_IMAGE = "wagoodman/dive";
+const DIVE_DOCKER_IMAGE = "prakhar1989/dive";
 
 // Note: This line relies on Docker Desktop's presence as a host application.
 // If you're running this React app in a browser, it won't work properly.
@@ -34,11 +34,8 @@ function useDockerDesktopClient() {
   return client;
 }
 
-function extractId(id: string) {
-  return id.replace("sha256:", "").substring(0, 12);
-}
-
 export function App() {
+  const [analysis, setAnalysisResult] = useState<AnalysisResult|undefined>(undefined);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [images, setImages] = useState<Image[]>([]);
   const [isHiveInstalled, setDiveInstalled] = useState<boolean>(false);
@@ -53,10 +50,11 @@ export function App() {
 
   const pullDive = async () => {
     setLoading(true);
-    const res = await ddClient.docker.cli.exec("pull", [DIVE_DOCKER_IMAGE]);
+    await ddClient.docker.cli.exec("pull", [DIVE_DOCKER_IMAGE]);
     setLoading(false);
     checkDiveInstallation();
   };
+
   const readImages = async () =>
     (await ddClient.docker.listImages()) as DockerImage[];
 
@@ -68,10 +66,21 @@ export function App() {
   };
 
   const analyze = async (image: Image) => {
-    /**
-     * docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest prakhar1989/catnip
-     */
     console.log("analysing", image);
+    setLoading(true);
+    const result = await ddClient.docker.cli.exec("run", [
+      "--rm",
+      "-v",
+      "/var/run/docker.sock:/var/run/docker.sock",
+      DIVE_DOCKER_IMAGE,
+      image.name,
+      "--json",
+      "result.json"
+    ]);
+    const dive = JSON.parse(result.stdout) as unknown as DiveResponse;
+    setLoading(false);
+    console.log(dive);
+    setAnalysisResult({image, dive});
   };
 
   const ImageList = () => (
@@ -101,7 +110,7 @@ export function App() {
                   variant="outlined"
                   onClick={() => analyze(image)}
                 >
-                  Explore
+                  Analyze
                 </Button>
               </CardActions>
             </Card>
@@ -122,6 +131,61 @@ export function App() {
     </Stack>
   );
 
+
+  const Analysis = () => (
+    <Stack direction="column" spacing={2} align-items="baseline">
+      <Button variant="contained" onClick={() => setAnalysisResult(undefined)}>
+        ← Back
+      </Button>
+      <Typography variant="h3">Analyzing: {analysis.image.name}</Typography>
+      <Stack direction="row" spacing={4}>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              Total Size
+            </Typography>
+            <Typography variant="h2">
+              {formatBytes(analysis.dive.image.sizeBytes)}
+            </Typography>
+          </CardContent>
+        </Card>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              Inefficient Bytes
+            </Typography>
+            <Typography variant="h2">
+              {formatBytes(analysis.dive.image.inefficientBytes)}
+            </Typography>
+          </CardContent>
+        </Card>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              Efficiency Score
+            </Typography>
+            <CircularProgressWithLabel
+              value={analysis.dive.image.efficiencyScore * 100}
+            ></CircularProgressWithLabel>
+          </CardContent>
+        </Card>
+      </Stack>
+      <ImageTable rows={analysis.dive.image.fileReference}></ImageTable>
+    </Stack>
+  );
+
   useEffect(() => {
     checkDiveInstallation();
     getImages();
@@ -135,12 +199,8 @@ export function App() {
         contents, and discover ways to shrink the size of your Docker/OCI image.
       </Typography>
       <Divider sx={{ mt: 4, mb: 4 }} orientation="horizontal" flexItem />
-      {isLoading ? <Stack><CircularProgress /></Stack> : <></>}
-      {!isHiveInstalled ? (
-        <HiveInstaller></HiveInstaller>
-      ) : (
-        <ImageList></ImageList>
-      )}
+      {!isHiveInstalled ? (<HiveInstaller></HiveInstaller>) : analysis ? (<Analysis></Analysis>) : (<ImageList></ImageList>)}
+      {isLoading ? <Stack sx={{mt: 4}} direction="column" alignItems="center"><CircularProgress /></Stack> : <></>}
     </>
   );
 }
