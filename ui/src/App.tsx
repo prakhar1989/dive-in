@@ -13,10 +13,10 @@ import {
   CardContent,
 } from "@mui/material";
 
-import {formatBytes, extractId} from './utils';
+import { formatBytes, extractId } from "./utils";
 import CircularProgressWithLabel from "./ring";
-import {DiveResponse, Image, AnalysisResult} from './models';
-import ImageTable from './imagetable';
+import { DiveResponse, Image, AnalysisResult } from "./models";
+import ImageTable from "./imagetable";
 
 interface DockerImage {
   Labels: string[] | null;
@@ -35,7 +35,9 @@ function useDockerDesktopClient() {
 }
 
 export function App() {
-  const [analysis, setAnalysisResult] = useState<AnalysisResult|undefined>(undefined);
+  const [analysis, setAnalysisResult] = useState<AnalysisResult | undefined>(
+    undefined
+  );
   const [isLoading, setLoading] = useState<boolean>(false);
   const [images, setImages] = useState<Image[]>([]);
   const [isHiveInstalled, setDiveInstalled] = useState<boolean>(false);
@@ -59,8 +61,10 @@ export function App() {
     (await ddClient.docker.listImages()) as DockerImage[];
 
   const getImages = async () => {
-    const images = (await readImages())
-      .filter((i) => i.Labels && i.RepoTags[0] !== "<none>:<none>")
+    const all = await readImages();
+    console.log(all);
+    const images = all
+      .filter((i) => i.RepoTags[0] !== "<none>:<none>")
       .map((i) => ({ name: i.RepoTags[0], id: extractId(i.Id) }));
     setImages(images);
   };
@@ -75,12 +79,12 @@ export function App() {
       DIVE_DOCKER_IMAGE,
       image.name,
       "--json",
-      "result.json"
+      "result.json",
     ]);
     const dive = JSON.parse(result.stdout) as unknown as DiveResponse;
     setLoading(false);
     console.log(dive);
-    setAnalysisResult({image, dive});
+    setAnalysisResult({ image, dive });
   };
 
   const ImageList = () => (
@@ -91,7 +95,7 @@ export function App() {
       <Grid container spacing={2}>
         {images.map((image, i) => (
           <Grid item xs key={i}>
-            <Card variant="outlined">
+            <Card sx={{ maxWidth: 200 }} variant="outlined">
               <CardContent>
                 <Typography
                   sx={{ fontSize: 14 }}
@@ -130,7 +134,6 @@ export function App() {
       </Button>
     </Stack>
   );
-
 
   const Analysis = () => (
     <Stack direction="column" spacing={2} align-items="baseline">
@@ -199,8 +202,20 @@ export function App() {
         contents, and discover ways to shrink the size of your Docker/OCI image.
       </Typography>
       <Divider sx={{ mt: 4, mb: 4 }} orientation="horizontal" flexItem />
-      {!isHiveInstalled ? (<HiveInstaller></HiveInstaller>) : analysis ? (<Analysis></Analysis>) : (<ImageList></ImageList>)}
-      {isLoading ? <Stack sx={{mt: 4}} direction="column" alignItems="center"><CircularProgress /></Stack> : <></>}
+      {!isHiveInstalled ? (
+        <HiveInstaller></HiveInstaller>
+      ) : analysis ? (
+        <Analysis></Analysis>
+      ) : (
+        <ImageList></ImageList>
+      )}
+      {isLoading ? (
+        <Stack sx={{ mt: 4 }} direction="column" alignItems="center">
+          <CircularProgress />
+        </Stack>
+      ) : (
+        <></>
+      )}
     </>
   );
 }
