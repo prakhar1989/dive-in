@@ -61,7 +61,6 @@ export function App() {
 
   const getImages = async () => {
     const all = await readImages();
-    console.log(all);
     const images = all
       .filter((i) => i.RepoTags && i.RepoTags[0] !== "<none>:<none>")
       .map((i) => ({ name: i.RepoTags[0], id: extractId(i.Id) }));
@@ -81,8 +80,8 @@ export function App() {
       "result.json",
     ]);
     const dive = JSON.parse(result.stdout) as unknown as DiveResponse;
-    setLoading(false);
     console.log(dive);
+    setLoading(false);
     setAnalysisResult({ image, dive });
   };
 

@@ -20,7 +20,7 @@ export interface DiveLayer {
   index: number;
   id: string;
   digestId: string;
-  size: number
+  sizeBytes: number;
   command: string;
 }
 

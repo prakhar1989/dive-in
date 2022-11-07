@@ -3,6 +3,7 @@ import { AnalysisResult } from "./models";
 import { formatBytes } from "./utils";
 import CircularProgressWithLabel from "./ring";
 import ImageTable from "./imagetable";
+import LayersTable from "./layerstable";
 
 export default function Analysis(props: {
   analysis: AnalysisResult;
@@ -16,7 +17,7 @@ export default function Analysis(props: {
           Back to images
         </Button>
         <Typography variant="h3">Analyzing: {image.name}</Typography>
-        <Stack direction="row" spacing={4} justifyContent="space-between">
+        <Stack direction="row" spacing={4}>
           <Card variant="outlined">
             <CardContent>
               <Typography
@@ -63,6 +64,10 @@ export default function Analysis(props: {
         <Stack>
             <Typography variant="h3">Largest Files (sorted by size)</Typography>
             <ImageTable rows={dive.image.fileReference}></ImageTable>
+        </Stack>
+        <Stack>
+            <Typography variant="h3">Layers</Typography>
+            <LayersTable rows={dive.layer}></LayersTable>
         </Stack>
       </Stack>
     </>
