@@ -13,10 +13,9 @@ import {
   CardContent,
 } from "@mui/material";
 
+import Analysis from './analysis';
 import { formatBytes, extractId } from "./utils";
-import CircularProgressWithLabel from "./ring";
 import { DiveResponse, Image, AnalysisResult } from "./models";
-import ImageTable from "./imagetable";
 
 interface DockerImage {
   Labels: string[] | null;
@@ -62,7 +61,6 @@ export function App() {
 
   const getImages = async () => {
     const all = await readImages();
-    console.log(all);
     const images = all
       .filter((i) => i.RepoTags[0] !== "<none>:<none>")
       .map((i) => ({ name: i.RepoTags[0], id: extractId(i.Id) }));
@@ -87,6 +85,45 @@ export function App() {
     setAnalysisResult({ image, dive });
   };
 
+  const queryImageSize = async (id: string) => {
+    const result = await ddClient.docker.cli.exec("image", [
+      "inspect",
+      id,
+      "--format='{{.Size}}'"
+    ]);
+    return formatBytes(Number(result.stdout));
+  }
+
+  function ImageCard(props: { image: Image }) {
+    return (
+      <>
+        <Card sx={{ maxWidth: 200 }} variant="outlined">
+          <CardContent>
+            <Typography
+              sx={{ fontSize: 14 }}
+              color="text.secondary"
+              gutterBottom
+            >
+              {props.image.id}
+            </Typography>
+            <Typography variant="body1" component="div">
+              {props.image.name}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={() => analyze(props.image)}
+            >
+              Analyze
+            </Button>
+          </CardActions>
+        </Card>
+      </>
+    );
+  }
+
   const ImageList = () => (
     <>
       <Typography variant="h3" sx={{ mb: 2 }}>
@@ -95,29 +132,7 @@ export function App() {
       <Grid container spacing={2}>
         {images.map((image, i) => (
           <Grid item xs key={i}>
-            <Card sx={{ maxWidth: 200 }} variant="outlined">
-              <CardContent>
-                <Typography
-                  sx={{ fontSize: 14 }}
-                  color="text.secondary"
-                  gutterBottom
-                >
-                  {image.id}
-                </Typography>
-                <Typography variant="body1" component="div">
-                  {image.name}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={() => analyze(image)}
-                >
-                  Analyze
-                </Button>
-              </CardActions>
-            </Card>
+            <ImageCard image={image}></ImageCard>
           </Grid>
         ))}
       </Grid>
@@ -135,64 +150,14 @@ export function App() {
     </Stack>
   );
 
-  const Analysis = () => (
-    <Stack direction="column" spacing={2} align-items="baseline">
-      <Button variant="contained" onClick={() => setAnalysisResult(undefined)}>
-        ← Back
-      </Button>
-      <Typography variant="h3">Analyzing: {analysis.image.name}</Typography>
-      <Stack direction="row" spacing={4}>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              Total Size
-            </Typography>
-            <Typography variant="h2">
-              {formatBytes(analysis.dive.image.sizeBytes)}
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              Inefficient Bytes
-            </Typography>
-            <Typography variant="h2">
-              {formatBytes(analysis.dive.image.inefficientBytes)}
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              Efficiency Score
-            </Typography>
-            <CircularProgressWithLabel
-              value={analysis.dive.image.efficiencyScore * 100}
-            ></CircularProgressWithLabel>
-          </CardContent>
-        </Card>
-      </Stack>
-      <ImageTable rows={analysis.dive.image.fileReference}></ImageTable>
-    </Stack>
-  );
-
   useEffect(() => {
     checkDiveInstallation();
     getImages();
   }, []);
+
+  const clearAnalysis = () => {
+    setAnalysisResult(undefined);
+  }
 
   return (
     <>
@@ -205,7 +170,7 @@ export function App() {
       {!isHiveInstalled ? (
         <HiveInstaller></HiveInstaller>
       ) : analysis ? (
-        <Analysis></Analysis>
+        <Analysis onExit={clearAnalysis} analysis={analysis}></Analysis>
       ) : (
         <ImageList></ImageList>
       )}
