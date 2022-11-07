@@ -1,5 +1,5 @@
 {
-  "icon": "docker.svg",
+  "icon": "scuba.svg",
   "vm": {
     "composefile": "docker-compose.yaml",
     "exposes": {
@@ -8,7 +8,7 @@
   },
   "ui": {
     "dashboard-tab": {
-      "title": "Dive",
+      "title": "Dive In",
       "src": "index.html",
       "root": "ui",
       "backend": {
