@@ -61,8 +61,9 @@ export function App() {
 
   const getImages = async () => {
     const all = await readImages();
+    console.log(all);
     const images = all
-      .filter((i) => i.RepoTags[0] !== "<none>:<none>")
+      .filter((i) => i.RepoTags && i.RepoTags[0] !== "<none>:<none>")
       .map((i) => ({ name: i.RepoTags[0], id: extractId(i.Id) }));
     setImages(images);
   };

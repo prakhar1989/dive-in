@@ -11,7 +11,7 @@ export default function Analysis(props: {
   const { image, dive } = props.analysis;
   return (
     <>
-      <Stack direction="column" spacing={2} align-items="baseline">
+      <Stack direction="column" spacing={4} align-items="baseline">
         <Button sx={{maxWidth: 150}} variant="outlined" onClick={props.onExit}>
           Back to images
         </Button>
@@ -60,7 +60,10 @@ export default function Analysis(props: {
             </CardContent>
           </Card>
         </Stack>
-        <ImageTable rows={dive.image.fileReference}></ImageTable>
+        <Stack>
+            <Typography variant="h3">Largest Files (sorted by size)</Typography>
+            <ImageTable rows={dive.image.fileReference}></ImageTable>
+        </Stack>
       </Stack>
     </>
   );

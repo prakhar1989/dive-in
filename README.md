@@ -21,3 +21,12 @@ $ make install-extension
 ## Development
 
 Go through [the official docs](https://docs.docker.com/desktop/extensions-sdk/quickstart/) to understand the basic setting up of the Docker extension.
+
+Useful commands for setting up debugging
+
+```
+$ docker extension dev debug prakhar1989/dive-in
+$ docker extension dev ui-source prakhar1989/dive-in http://localhost:3000
+```
+
+Make sure you run `npm run start` in the `ui/` folder.
