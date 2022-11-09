@@ -29,6 +29,7 @@ LABEL org.opencontainers.image.title="Dive" \
     com.docker.desktop.extension.api.version="0.3.0" \
     com.docker.extension.screenshots="" \
     com.docker.extension.detailed-description="" \
+    com.docker.desktop.extension.icon="scuba.svg" \
     com.docker.extension.publisher-url="" \
     com.docker.extension.additional-urls="" \
     com.docker.extension.changelog=""
