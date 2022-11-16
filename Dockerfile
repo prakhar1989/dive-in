@@ -27,12 +27,12 @@ LABEL org.opencontainers.image.title="Dive" \
     org.opencontainers.image.description="Use Dive to  exploring a docker image, layer contents, and discovering ways to shrink the size of your Docker/OCI image" \
     org.opencontainers.image.vendor="Docker Inc." \
     com.docker.desktop.extension.api.version="0.3.0" \
-    com.docker.extension.screenshots="" \
+    com.docker.extension.screenshots="https://github.com/prakhar1989/dive-in/blob/main/screenshots/1.png?raw=true" \
     com.docker.extension.detailed-description="" \
     com.docker.desktop.extension.icon="scuba.svg" \
-    com.docker.extension.publisher-url="" \
-    com.docker.extension.additional-urls="" \
-    com.docker.extension.changelog=""
+    com.docker.extension.publisher-url="https://prakhar.me" \
+    com.docker.extension.additional-urls="https://github.com/prakhar1989/dive-in" \
+    com.docker.extension.changelog="First version"
 
 COPY --from=builder /backend/bin/service /
 COPY docker-compose.yaml .
