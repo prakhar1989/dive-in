@@ -1,5 +1,5 @@
 IMAGE?=prakhar1989/dive-in
-TAG?=0.0.2
+TAG?=0.0.3
 
 BUILDER=buildx-multi-arch
 
