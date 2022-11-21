@@ -31,6 +31,7 @@ LABEL org.opencontainers.image.title="Dive" \
     com.docker.extension.detailed-description="<p><h1>Dive In</h1>A Docker extension that helps you explore a docker image, layer contents, and discover ways to shrink the size of your Docker/OCI image.</p>" \
     com.docker.desktop.extension.icon="https://raw.githubusercontent.com/prakhar1989/dive-in/main/scuba.svg" \
     com.docker.extension.publisher-url="https://prakhar.me" \
+    com.docker.extension.categories="utility-tools" \
     com.docker.extension.additional-urls='[{"title":"Documentation","url":"https://github.com/prakhar1989/dive-in"}]' \
     com.docker.extension.changelog="First version"
 
