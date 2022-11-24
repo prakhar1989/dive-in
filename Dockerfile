@@ -24,11 +24,11 @@ RUN npm run build
 
 FROM alpine
 LABEL org.opencontainers.image.title="Dive" \
-    org.opencontainers.image.description="Use Dive to  exploring a docker image, layer contents, and discovering ways to shrink the size of your Docker/OCI image" \
+    org.opencontainers.image.description="”Explore docker images, layer contents, and discover ways to shrink the size of your Docker/OCI image." \
     org.opencontainers.image.vendor="Docker Inc." \
     com.docker.desktop.extension.api.version="0.3.0" \
     com.docker.extension.screenshots='[{"alt":"main page", "url":"https://github.com/prakhar1989/dive-in/blob/main/screenshots/1.png?raw=true"}, {"alt":"start containers", "url":"https://github.com/prakhar1989/dive-in/blob/main/screenshots/2.png?raw=true"}]' \
-    com.docker.extension.detailed-description="<p><h1>Dive In</h1>A Docker extension that helps you explore a docker image, layer contents, and discover ways to shrink the size of your Docker/OCI image.</p>" \
+    com.docker.extension.detailed-description="<p><h1>Dive In</h1>”Explore docker images, layer contents, and discover ways to shrink the size of your Docker/OCI image.</p>" \
     com.docker.desktop.extension.icon="https://raw.githubusercontent.com/prakhar1989/dive-in/main/scuba.svg" \
     com.docker.extension.publisher-url="https://prakhar.me" \
     com.docker.extension.categories="utility-tools" \

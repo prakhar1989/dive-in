@@ -13,7 +13,7 @@ import {
   CardContent,
 } from "@mui/material";
 
-import Analysis from './analysis';
+import Analysis from "./analysis";
 import { formatBytes, extractId } from "./utils";
 import { DiveResponse, Image, AnalysisResult } from "./models";
 
@@ -88,10 +88,10 @@ export function App() {
     const result = await ddClient.docker.cli.exec("image", [
       "inspect",
       id,
-      "--format='{{.Size}}'"
+      "--format='{{.Size}}'",
     ]);
     return formatBytes(Number(result.stdout));
-  }
+  };
 
   function ImageCard(props: { image: Image }) {
     return (
@@ -156,29 +156,29 @@ export function App() {
 
   const clearAnalysis = () => {
     setAnalysisResult(undefined);
-  }
+  };
 
   return (
     <>
-      <Typography variant="h1">Welcome to Dive-In</Typography>
+      <Typography variant="h1">Dive-In</Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
         Use this Docker extension to helps you explore a docker image, layer
         contents, and discover ways to shrink the size of your Docker/OCI image.
       </Typography>
       <Divider sx={{ mt: 4, mb: 4 }} orientation="horizontal" flexItem />
-      {!isHiveInstalled ? (
-        <HiveInstaller></HiveInstaller>
-      ) : analysis ? (
-        <Analysis onExit={clearAnalysis} analysis={analysis}></Analysis>
-      ) : (
-        <ImageList></ImageList>
-      )}
       {isLoading ? (
         <Stack sx={{ mt: 4 }} direction="column" alignItems="center">
           <CircularProgress />
         </Stack>
       ) : (
         <></>
+      )}
+      {!isHiveInstalled ? (
+        <HiveInstaller></HiveInstaller>
+      ) : analysis ? (
+        <Analysis onExit={clearAnalysis} analysis={analysis}></Analysis>
+      ) : (
+        <ImageList></ImageList>
       )}
     </>
   );
