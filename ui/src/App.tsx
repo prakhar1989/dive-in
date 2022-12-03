@@ -9,6 +9,7 @@ import {
   Grid,
   CircularProgress,
   Alert,
+  Box,
   Button,
   CardContent,
 } from "@mui/material";
@@ -68,7 +69,6 @@ export function App() {
   };
 
   const analyze = async (image: Image) => {
-    setLoading(true);
     const result = await ddClient.docker.cli.exec("run", [
       "--rm",
       "-v",
@@ -80,23 +80,14 @@ export function App() {
     ]);
     const dive = JSON.parse(result.stdout) as unknown as DiveResponse;
     console.log(dive);
-    setLoading(false);
     setAnalysisResult({ image, dive });
   };
 
-  const queryImageSize = async (id: string) => {
-    const result = await ddClient.docker.cli.exec("image", [
-      "inspect",
-      id,
-      "--format='{{.Size}}'",
-    ]);
-    return formatBytes(Number(result.stdout));
-  };
-
   function ImageCard(props: { image: Image }) {
+    const [analysisLoading, setAnalysisLoading] = useState<boolean>(false);
     return (
       <>
-        <Card sx={{ maxWidth: 200 }} variant="outlined">
+        <Card sx={{ minWidth: 200 }} variant="outlined">
           <CardContent>
             <Typography
               sx={{ fontSize: 14 }}
@@ -110,13 +101,30 @@ export function App() {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button
-              size="small"
-              variant="outlined"
-              onClick={() => analyze(props.image)}
-            >
-              Analyze
-            </Button>
+            <Box sx={{ position: "relative" }}>
+              <Button
+                variant="outlined"
+                disabled={analysisLoading}
+                onClick={() => {
+                  setAnalysisLoading(true);
+                  analyze(props.image);
+                }}
+              >
+                Analyze
+                {analysisLoading && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      marginTop: "-12px",
+                      marginLeft: "-12px",
+                    }}
+                  />
+                )}
+              </Button>
+            </Box>
           </CardActions>
         </Card>
       </>
