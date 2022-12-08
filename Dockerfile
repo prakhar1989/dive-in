@@ -23,7 +23,7 @@ COPY ui /ui
 RUN npm run build
 
 FROM alpine
-LABEL org.opencontainers.image.title="Dive" \
+LABEL org.opencontainers.image.title="Dive In" \
     org.opencontainers.image.description="Explore docker images, layer contents, and discover ways to shrink the size of your Docker/OCI image." \
     org.opencontainers.image.vendor="Docker Inc." \
     com.docker.desktop.extension.api.version="0.3.0" \
