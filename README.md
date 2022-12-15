@@ -9,14 +9,7 @@ Built on the top of excellent CLI tool - https://github.com/wagoodman/dive
 
 ## Installation
 
-Make sure your Docker desktop supports extensions. Currently, this extension is not yet available on the marketplace so the best way to try it out to is to build and install it locally.
-
-```
-$ git clone https://github.com/prakhar1989/dive-in.git
-$ cd dive-in
-$ make build-extension
-$ make install-extension
-```
+Make sure your Docker desktop supports extensions. This extension can be installed from [Docker Hub] (https://hub.docker.com/extensions/prakhar1989/dive-in) or in Docker Desktop. 
 
 ## Development
 
