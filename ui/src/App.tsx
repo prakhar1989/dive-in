@@ -45,7 +45,7 @@ export function App() {
 
   const checkDiveInstallation = async () => {
     const result = (await readImages()).some((i) =>
-      i.RepoTags[0].includes(DIVE_DOCKER_IMAGE)
+      i.RepoTags[0]?.includes(DIVE_DOCKER_IMAGE)
     );
     setDiveInstalled(result);
   };
