@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createDockerDesktopClient } from "@docker/extension-api-client";
 import {
-  Typography,
-  Card,
-  CardActions,
+  Typography, 
   Divider,
-  Stack,
-  Grid,
+  Stack, 
   CircularProgress,
-  Alert,
-  Box,
-  Button,
-  CardContent,
+  Alert, 
+  Button
 } from "@mui/material";
-
 import Analysis from "./analysis";
-import { formatBytes, extractId } from "./utils";
+import { extractId } from "./utils";
 import { DiveResponse, Image, AnalysisResult } from "./models";
+import ImageList from "./components/ImageList";
+import HiveInstaller from "./components/HiveInstaller";
 
 interface DockerImage {
   Labels: string[] | null;
@@ -83,80 +79,6 @@ export function App() {
     setAnalysisResult({ image, dive });
   };
 
-  function ImageCard(props: { image: Image }) {
-    const [analysisLoading, setAnalysisLoading] = useState<boolean>(false);
-    return (
-      <>
-        <Card sx={{ minWidth: 200 }} variant="outlined">
-          <CardContent>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              {props.image.id}
-            </Typography>
-            <Typography variant="body1" component="div">
-              {props.image.name}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Box sx={{ position: "relative" }}>
-              <Button
-                variant="outlined"
-                disabled={analysisLoading}
-                onClick={() => {
-                  setAnalysisLoading(true);
-                  analyze(props.image);
-                }}
-              >
-                Analyze
-                {analysisLoading && (
-                  <CircularProgress
-                    size={24}
-                    sx={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      marginTop: "-12px",
-                      marginLeft: "-12px",
-                    }}
-                  />
-                )}
-              </Button>
-            </Box>
-          </CardActions>
-        </Card>
-      </>
-    );
-  }
-
-  const ImageList = () => (
-    <>
-      <Typography variant="h3" sx={{ mb: 2 }}>
-        Choose an image below to get started
-      </Typography>
-      <Grid container spacing={2}>
-        {images.map((image, i) => (
-          <Grid item xs key={i}>
-            <ImageCard image={image}></ImageCard>
-          </Grid>
-        ))}
-      </Grid>
-    </>
-  );
-
-  const HiveInstaller = () => (
-    <Stack spacing={2}>
-      <Alert severity="warning">
-        Dive was not found. Click the button below to install Dive
-      </Alert>
-      <Button variant="contained" onClick={() => pullDive()}>
-        Install Dive
-      </Button>
-    </Stack>
-  );
-
   useEffect(() => {
     checkDiveInstallation();
     getImages();
@@ -186,7 +108,7 @@ export function App() {
       ) : analysis ? (
         <Analysis onExit={clearAnalysis} analysis={analysis}></Analysis>
       ) : (
-        <ImageList></ImageList>
+        <ImageList analyze={analyze} images={images}></ImageList>
       )}
     </>
   );

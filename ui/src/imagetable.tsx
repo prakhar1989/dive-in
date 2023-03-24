@@ -7,11 +7,15 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { FileReference } from './models';
 import { formatBytes } from './utils';
-import { Typography } from '@mui/material';
+import { styled } from '@mui/material';
 
 interface TableProps {
     rows: FileReference[];
 }
+
+const TableCellHeader = styled(TableCell)(() => ({
+  fontWeight: 'bold'
+}))
 
 export default function ImageTable(props: TableProps) {
   return (
@@ -19,9 +23,9 @@ export default function ImageTable(props: TableProps) {
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
           <TableRow>
-            <TableCell sx={{fontWeight: 'bold'}}>Count</TableCell>
-            <TableCell sx={{fontWeight: 'bold'}} align="right">Total Space</TableCell>
-            <TableCell sx={{fontWeight: 'bold'}} align="right">Path</TableCell>
+            <TableCellHeader>Count</TableCellHeader>
+            <TableCellHeader align="right">Total Space</TableCellHeader>
+            <TableCellHeader align="right">Path</TableCellHeader>
           </TableRow>
         </TableHead>
         <TableBody>
